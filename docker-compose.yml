@@ -1,0 +1,86 @@
+version: '2.4'
+
+services:
+  db-cursos:
+    image: postgres
+    environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=cg_cursos
+    restart: always
+    networks:
+      - dbpautas-network 
+  
+  db-usuarios:
+    image: postgres
+    environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=cg_usuarios
+    restart: always
+    networks:
+      - dbpautas-network 
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    networks:
+      - dbpautas-network
+
+  eureka-server:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./eureka-server
+    image: victorhfsilva/gerenciamento-cursos-eureka-server
+    env_file:
+      - ./eureka-server/.env
+    networks:
+      - dbpautas-network 
+
+  usuarios-ms:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./usuarios-ms
+    image: victorhfsilva/gerenciamento-cursos-usuarios-ms
+    env_file:
+      - ./usuarios-ms/.env
+    depends_on:
+      - db-usuarios
+      - eureka-server
+      - rabbitmq
+    networks:
+      - dbpautas-network 
+
+  cursos-ms:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./cursos-ms
+    image: victorhfsilva/gerenciamento-cursos-cursos-ms
+    env_file:
+      - ./cursos-ms/.env
+    depends_on:
+      - db-cursos
+      - eureka-server
+      - rabbitmq
+    networks:
+      - dbpautas-network 
+
+  api-gateway:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./api-gateway
+    image: victorhfsilva/gerenciamento-cursos-api-gateway
+    env_file:
+      - ./api-gateway/.env
+    depends_on:
+      - eureka-server
+    ports:
+      - "8080:8080"
+    networks:
+      - dbpautas-network 
+
+networks:
+  dbpautas-network:
+    driver: bridge

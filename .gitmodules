@@ -1,0 +1,12 @@
+[submodule "gerenciador-cursos-api-gateway"]
+	path = gerenciador-cursos-api-gateway
+	url = https://github.com/victorhfsilva/gerenciador-cursos-api-gateway.git
+[submodule "gerenciador-cursos-eureka-server"]
+	path = gerenciador-cursos-eureka-server
+	url = https://github.com/victorhfsilva/gerenciador-cursos-eureka-server.git
+[submodule "gerenciador-cursos-usuarios-ms-rabbitmq"]
+	path = gerenciador-cursos-usuarios-ms-rabbitmq
+	url = https://github.com/victorhfsilva/gerenciador-cursos-usuarios-ms-rabbitmq.git
+[submodule "gerenciador-cursos-cursos-ms-rabbitmq"]
+	path = gerenciador-cursos-cursos-ms-rabbitmq
+	url = https://github.com/victorhfsilva/gerenciador-cursos-cursos-ms-rabbitmq
